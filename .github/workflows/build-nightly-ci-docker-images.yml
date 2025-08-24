@@ -2,6 +2,7 @@ name: Build docker images (Nightly CI)
 
 on:
   workflow_call:
+  workflow_dispatch:
   push:
     branches:
       - build_nightly_ci_docker_image*
@@ -14,7 +15,11 @@ jobs:
   latest-with-torch-nightly-docker:
     name: "Nightly PyTorch + Stable TensorFlow"
     runs-on:
-      group: aws-general-8-plus
+      - machine
+      - tenancy=spot
+      - cpu=8
+      - ram=16
+      - architecture=x64
     steps:
       -
         name: Set up Docker Buildx
@@ -42,7 +47,12 @@ jobs:
   nightly-torch-deepspeed-docker:
     name: "Nightly PyTorch + DeepSpeed"
     runs-on:
-      group: aws-g4dn-2xlarge-cache
+      - machine
+      - gpu=t4g
+      - tenancy=spot
+      - cpu=8
+      - ram=16
+      - architecture=x64
     steps:
       -
         name: Set up Docker Buildx
