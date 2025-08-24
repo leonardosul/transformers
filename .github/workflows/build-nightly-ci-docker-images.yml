@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - build_nightly_ci_docker_image*
+      - use-machine-runners
 
 concurrency:
   group: docker-images-builds
