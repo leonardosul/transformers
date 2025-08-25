@@ -1,6 +1,7 @@
 name: Self-hosted runner (push)
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
     branches: ["main"]
@@ -33,7 +34,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-4xlarge-cache, aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -133,7 +139,12 @@ jobs:
         folders: ${{ fromJson(needs.setup.outputs.matrix) }}
         machine_type: [aws-g5-4xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -246,7 +257,12 @@ jobs:
         folders: ${{ fromJson(needs.setup.outputs.matrix) }}
         machine_type: [aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -359,7 +375,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-4xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-pytorch-deepspeed-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -469,7 +490,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-pytorch-deepspeed-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
