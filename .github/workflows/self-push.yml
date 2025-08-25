@@ -10,6 +10,7 @@ on:
     branches:
       - ci_*
       - ci-*
+      - use-machine-runners
     paths:
       - "src/**"
       - "tests/**"
