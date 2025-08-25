@@ -37,7 +37,7 @@ jobs:
     runs-on:
       - machine
       - gpu=a10g
-      - tenancy=spot
+      - tenancy=on_demand
       - cpu=16
       - ram=64
       - architecture=x64
@@ -142,7 +142,7 @@ jobs:
     runs-on:
       - machine
       - gpu=a10g
-      - tenancy=spot
+      - tenancy=on_demand
       - cpu=16
       - ram=64
       - architecture=x64
@@ -260,7 +260,7 @@ jobs:
     runs-on:
       - machine
       - gpu=a10g
-      - tenancy=spot
+      - tenancy=on_demand
       - cpu=16
       - ram=64
       - architecture=x64
@@ -378,7 +378,7 @@ jobs:
     runs-on:
       - machine
       - gpu=a10g
-      - tenancy=spot
+      - tenancy=on_demand
       - cpu=16
       - ram=64
       - architecture=x64
@@ -493,7 +493,7 @@ jobs:
     runs-on:
       - machine
       - gpu=a10g
-      - tenancy=spot
+      - tenancy=on_demand
       - cpu=16
       - ram=64
       - architecture=x64
