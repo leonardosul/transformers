@@ -27,8 +27,13 @@ jobs:
       fail-fast: false
       matrix:
         split_keys: ${{ fromJson(inputs.split_keys) }}
-    runs-on: 
-      group: aws-g5-4xlarge-cache
+    runs-on:
+      - machine
+      - gpu=a10g
+      - tenancy=spot
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/

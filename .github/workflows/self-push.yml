@@ -1,6 +1,7 @@
 name: Self-hosted runner (push)
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
     branches: ["main"]
@@ -9,6 +10,7 @@ on:
     branches:
       - ci_*
       - ci-*
+      - use-machine-runners
     paths:
       - "src/**"
       - "tests/**"
@@ -33,7 +35,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-4xlarge-cache, aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=on_demand
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -70,14 +77,14 @@ jobs:
           echo "env.CI_BRANCH = ${{ env.CI_BRANCH }}"
           echo "env.CI_SHA = ${{ env.CI_SHA }}"
 
-      - name: Update clone using environment variables
-        working-directory: /transformers
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        working-directory: /transformers
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - name: Cleanup
         working-directory: /transformers
@@ -133,7 +140,12 @@ jobs:
         folders: ${{ fromJson(needs.setup.outputs.matrix) }}
         machine_type: [aws-g5-4xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=on_demand
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -180,14 +192,14 @@ jobs:
           echo "$machine_type"
           echo "machine_type=$machine_type" >> $GITHUB_ENV
 
-      - name: Update clone using environment variables
-        working-directory: /transformers
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        working-directory: /transformers
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - name: Reinstall transformers in edit mode (remove the one installed during docker image build)
         working-directory: /transformers
@@ -246,7 +258,12 @@ jobs:
         folders: ${{ fromJson(needs.setup.outputs.matrix) }}
         machine_type: [aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=on_demand
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-all-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -293,14 +310,14 @@ jobs:
           echo "$machine_type"
           echo "machine_type=$machine_type" >> $GITHUB_ENV
 
-      - name: Update clone using environment variables
-        working-directory: /transformers
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        working-directory: /transformers
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - name: Reinstall transformers in edit mode (remove the one installed during docker image build)
         working-directory: /transformers
@@ -359,7 +376,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-4xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=on_demand
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-pytorch-deepspeed-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -406,14 +428,14 @@ jobs:
           echo "$machine_type"
           echo "machine_type=$machine_type" >> $GITHUB_ENV
 
-      - name: Update clone using environment variables
-        working-directory: /workspace/transformers
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        working-directory: /workspace/transformers
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - name: Reinstall transformers in edit mode (remove the one installed during docker image build)
         working-directory: /workspace/transformers
@@ -469,7 +491,12 @@ jobs:
       matrix:
         machine_type: [aws-g5-12xlarge-cache]
     runs-on:
-      group: '${{ matrix.machine_type }}'
+      - machine
+      - gpu=a10g
+      - tenancy=on_demand
+      - cpu=16
+      - ram=64
+      - architecture=x64
     container:
       image: huggingface/transformers-pytorch-deepspeed-latest-gpu-push-ci
       options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
@@ -516,14 +543,14 @@ jobs:
           echo "$machine_type"
           echo "machine_type=$machine_type" >> $GITHUB_ENV
 
-      - name: Update clone using environment variables
-        working-directory: /workspace/transformers
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        working-directory: /workspace/transformers
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - name: Reinstall transformers in edit mode (remove the one installed during docker image build)
         working-directory: /workspace/transformers
@@ -620,13 +647,13 @@ jobs:
         with:
           fetch-depth: 20
 
-      - name: Update clone using environment variables
-        run: |
-          echo "original branch = $(git branch --show-current)"
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo "updated branch = $(git branch --show-current)"
-          git checkout ${{ env.CI_SHA }}
-          echo "log = $(git log -n 1)"
+#      - name: Update clone using environment variables
+#        run: |
+#          echo "original branch = $(git branch --show-current)"
+#          git fetch && git checkout ${{ env.CI_BRANCH }}
+#          echo "updated branch = $(git branch --show-current)"
+#          git checkout ${{ env.CI_SHA }}
+#          echo "log = $(git log -n 1)"
 
       - uses: actions/download-artifact@v4
       - name: Send message to Slack
